@@ -10,6 +10,6 @@
   "author": "",
   "license": "ISC",
   "dependencies": {
-    "tetris-engine": "^1.2.2"
+    "tetris-engine": "^1.2.12"
   }
 }

@@ -36,32 +36,17 @@
 /******/ 	// define getter function for harmony exports
 /******/ 	__webpack_require__.d = function(exports, name, getter) {
 /******/ 		if(!__webpack_require__.o(exports, name)) {
-/******/ 			Object.defineProperty(exports, name, { enumerable: true, get: getter });
+/******/ 			Object.defineProperty(exports, name, {
+/******/ 				configurable: false,
+/******/ 				enumerable: true,
+/******/ 				get: getter
+/******/ 			});
 /******/ 		}
 /******/ 	};
 /******/
 /******/ 	// define __esModule on exports
 /******/ 	__webpack_require__.r = function(exports) {
-/******/ 		if(typeof Symbol !== 'undefined' && Symbol.toStringTag) {
-/******/ 			Object.defineProperty(exports, Symbol.toStringTag, { value: 'Module' });
-/******/ 		}
 /******/ 		Object.defineProperty(exports, '__esModule', { value: true });
-/******/ 	};
-/******/
-/******/ 	// create a fake namespace object
-/******/ 	// mode & 1: value is a module id, require it
-/******/ 	// mode & 2: merge all properties of value into the ns
-/******/ 	// mode & 4: return value when already ns object
-/******/ 	// mode & 8|1: behave like require
-/******/ 	__webpack_require__.t = function(value, mode) {
-/******/ 		if(mode & 1) value = __webpack_require__(value);
-/******/ 		if(mode & 8) return value;
-/******/ 		if((mode & 4) && typeof value === 'object' && value && value.__esModule) return value;
-/******/ 		var ns = Object.create(null);
-/******/ 		__webpack_require__.r(ns);
-/******/ 		Object.defineProperty(ns, 'default', { enumerable: true, value: value });
-/******/ 		if(mode & 2 && typeof value != 'string') for(var key in value) __webpack_require__.d(ns, key, function(key) { return value[key]; }.bind(null, key));
-/******/ 		return ns;
 /******/ 	};
 /******/
 /******/ 	// getDefaultExport function for compatibility with non-harmony modules
@@ -93,10 +78,10 @@
 /*! no static exports found */
 /***/ (function(module, exports, __webpack_require__) {
 
-let Engine = __webpack_require__(/*! tetris-engine */ "./node_modules/tetris-engine/dist/index.js").Engine
+let Engine = __webpack_require__(/*! tetris-engine */ "./node_modules/tetris-engine/dist/index.js").Engine;
 
 let App = new Vue({
-    template:
+   template:
         `<table class="game-table">
             <tbody>
                 <tr v-for="row in gameState.body">
@@ -106,69 +91,67 @@ let App = new Vue({
                 </tr>
             </tbody>
         </table>`,
-    el: '#app',
-    data() {       
-        return {
-            gameState: {
-                body:[]
+   el: '#app',
+   data() {       
+      return {
+         gameState: {
+            body: []
+         }
+      };
+   },
+   methods: {
+      render(gameState) {
+         if (gameState.gameStatus == 3) {
+            alert('game over');
+         }
+         this.gameState = gameState;
+      },
+      onKeyDown(e) {
+         if (e && e.key && this) {
+            switch (e.key) {
+               case 'Insert':
+                  this.$gameEngine.rotateBack();
+                  break;
+               case 'Delete':
+                  this.$gameEngine.rotate();
+                  break;
+               case 'ArrowUp':
+                  this.$gameEngine.moveUp();
+                  break;
+               case 'ArrowDown':
+                  this.$gameEngine.moveDown();
+                  break;
+               case 'ArrowLeft':
+                  this.$gameEngine.moveLeft();
+                  break;
+               case 'ArrowRight':
+                  this.$gameEngine.moveRight();
+                  break;
             }
-        }
-    },
-    methods: {
-        render(gameState) {
-            if(gameState.gameStatus == 3)
-                alert('game over');
-            this.gameState = gameState;
-        },
-        onKeyDown(e) {
-            if (e && e.key && this) {
-               switch (e.key) {
-                case 'Insert':
-                    this.$gameEngine.start();
-                    break;
-                  case 'Insert':
-                    this.$gameEngine.rotateBack();
-                    break;
-                  case 'Delete':
-                    this.$gameEngine.rotate();
-                    break;
-                  case 'ArrowUp':
-                    this.$gameEngine.moveUp();
-                    break;
-                  case 'ArrowDown':
-                    this.$gameEngine.moveDown();
-                    break;
-                  case 'ArrowLeft':
-                    this.$gameEngine.moveLeft();
-                    break;
-                  case 'ArrowRight':
-                    this.$gameEngine.moveRight();
-                    break;
-                }
-            }
-        }
-    },
-    beforeMount() {
+         }
+      }
+   },
+   beforeMount() {
 
-        let areaHeight = 15;
-        let areaWidth = 25;
+      let areaHeight = 15;
+      let areaWidth = 25;
 
-        let defaultHeap = [
-          [0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-          [0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
-          [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
-        ];
+      let defaultHeap = [
+         [0, 0, 0, 0, 1, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 1, 1, 0, 1, 0, 0, 0, 0, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 1, 1, 1, 1, 1, 1, 1, 0, 0, 0, 0, 0],
+         [0, 0, 0, 0, 0, 0, 1, 1, 0, 0, 0, 0, 0, 0, 0, 0],
+      ];
         
-        this.$gameEngine = new Engine(areaHeight, areaWidth, this.render, defaultHeap);
+      this.$gameEngine = new Engine(areaHeight, areaWidth, this.render, defaultHeap);
 
-        window.document.body.addEventListener('keydown', this.onKeyDown.bind(this));
+      window.document.body.addEventListener('keydown', this.onKeyDown.bind(this));
 
-        this.$gameEngine.start();
-        setInterval(()=>{
-            this.$gameEngine.moveDown();
-        }, 1000)
-    }
+      this.$gameEngine.start();
+      setInterval(()=>{
+         this.$gameEngine.moveDown();
+      }, 1000);
+   }
 });
 
 
@@ -217,6 +200,15 @@ class Engine {
 
     this._gameStatus = GAME_STATUS.INIT;    
 
+    this._statistic = {
+      countShapesFalled: 0,
+      countShapesFalledByType: { },
+      countLinesReduced: 0,
+      countDoubleLinesReduced: 0,
+      countTrippleLinesReduced: 0,
+      countQuadrupleLinesReduced: 0
+    }
+
     this._heap = [];
     if(defaultHeap && defaultHeap.length && defaultHeap[0].length) {
 
@@ -239,6 +231,8 @@ class Engine {
       }
     }
 
+    this._checkHeapForReduce();
+
     if(renderHandle) {
       renderHandle(this.state);
       this._renderHandle = renderHandle;
@@ -251,6 +245,14 @@ class Engine {
   _newFigure() {
     this._shape = this._nextShape ? this._nextShape : new Shape(this._shapesSet, parseInt(this.width / 2 - 3), this.height);
     this._nextShape = new Shape(this._shapesSet, parseInt(this.width / 2 - 3), this.height);
+
+    let countFalledShapesByThisKind = this._statistic.countShapesFalledByType[this._shape.name];
+    if(!countFalledShapesByThisKind)
+      this._statistic.countShapesFalledByType[this._shape.name] = 1;
+    else 
+      this._statistic.countShapesFalledByType[this._shape.name]++;
+
+    this._statistic.countShapesFalled++;
   }
 
   /**
@@ -264,6 +266,10 @@ class Engine {
       this._newFigure();
       this._gameStatus = GAME_STATUS.WORK;
       return true;
+    }
+    
+    if(this._gameStatus == GAME_STATUS.PAUSE) {
+      this._gameStatus = GAME_STATUS.WORK;
     }
   }
 
@@ -390,6 +396,19 @@ class Engine {
         newHeap.push(this._heap[y]);
     }
 
+    this._statistic.countLinesReduced += linesToRemove.length;
+    switch(linesToRemove.length) {
+      case 2:
+        this._statistic.countDoubleLinesReduced++;
+        break;
+      case 3:
+        this._statistic.countTrippleLinesReduced++;
+        break;
+      case 4: 
+        this._statistic.countQuadrupleLinesReduced++;
+        break;
+    }
+
     this._heap = newHeap;
   }
 
@@ -489,14 +508,6 @@ class Engine {
     return this._heap[y][x].class;
   }
 
-  _isLeftEdge(y, x) {
-    return this._getShapeIndexX(x) == 0 && this._getShapeIndexY(y) >= 0 && this._getShapeIndexY(y) <= 4;
-  }
-
-  _isRightEdge(y, x) {
-    return this._getShapeIndexX(x) == 4 && this._getShapeIndexY(y) >= 0 && this._getShapeIndexY(y) <= 4;
-  }
-
   _getBody() {
     let body = [];
     for (let y = this.height - 1; y >= 0; y--) {
@@ -528,7 +539,8 @@ class Engine {
       body: this._getBody(),
       shapeName: this._shape ? this._shape.name : null,
       nextShapeName: this._nextShape ? this._nextShape.name : null,
-      nextShapeBody: this._nextShape ? this._nextShape.body : null
+      nextShapeBody: this._nextShape ? this._nextShape.body : null,
+      statistic: this._statistic
     }
   }
 }
